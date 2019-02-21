@@ -2,12 +2,6 @@ import React, { Component } from 'react';
 import '../App.css';
 import Notification from './Notification'
 import listService from '../services/lists'
-import List from './List'
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom'
 
 class Lists extends React.Component {
   constructor() {
@@ -15,10 +9,7 @@ class Lists extends React.Component {
     this.state = {
       lists: [],
       newList: '',
-      error: null,
-      username: '',
-      password: '',
-      user: null
+      error: null
     }
   }
 
@@ -31,14 +22,15 @@ class Lists extends React.Component {
       })
   }
 
-  toggleVisible = () => {
-    this.setState({ showAll: !this.state.showAll })
+  handleListNameChange = (event) => {
+    this.setState({ newList: event.target.value })
   }
 
-  addList = (event) => {
+  makeNewList = (event) => {
     event.preventDefault()
+    console.log(this.state.newList)
     const listObject = {
-      content: this.state.newList,
+      name: this.state.newList,
       date: new Date(),
     }
     
@@ -52,15 +44,8 @@ class Lists extends React.Component {
       })
   }
 
-  handleListChange = (event) => {
-    this.setState({ newList: event.target.value })
-  }
 
-  handleLoginFieldChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-
-
+  
   render() {
 
     return (
@@ -69,14 +54,18 @@ class Lists extends React.Component {
 
         <Notification message={this.state.error} />
 
-        <Router>
+        <form onSubmit={this.makeNewList}>
+          <label>Tee uusi lista:</label>
+          <input type="text" name="newList" onChange={this.handleListNameChange}/>
+          <input type="submit" value="Lähetä"/>
+        </form>
+
          <div>          
           <ul>
             {this.state.lists.map(list => 
-              <li key={list.id}><a key={list.name} href={list.name}>{list.name}</a></li>)}          
+              <li key={list.id}><a key={list.name} href={list.name}>{list.name}</a></li>)}  
           </ul>
         </div>
-      </Router>
 
       </div>
     )

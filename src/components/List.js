@@ -9,14 +9,16 @@ class List extends React.Component {
     this.state = {
       list: null,
       error: null,
+      loading: true
     }
   }
 
   componentDidMount() {
+    const { name } = this.props.match.params
     listService
-      .getByName('Lista')
+      .getByName(name)
       .then(list => {
-        this.setState({ list })
+        this.setState({ list: list, loading: false })
         console.log(list)
       })
   }
@@ -76,12 +78,31 @@ class List extends React.Component {
 
 
   render() {
-
-    return (
-      <div>
-        <h1>asdf</h1>
-      </div>
-    )
+    const list = this.state.list;
+    if (this.state.loading){
+      return (
+        <div>Lataa.....</div>
+      )
+    }
+    else if (list == null){
+      return ( 
+        <div>
+          Haettua listaa ei löytynyt
+          <a href="/">Takaisin etusivulle</a>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <h1>{list.name}</h1>
+          <ul>
+              {list.items.map(item => 
+                <li key={item._id}>{item.name}</li>)}  
+          </ul>        
+          <a href="/">Takaisin etusivulle</a>          
+        </div>
+      )
+    }
   }
 }
 
