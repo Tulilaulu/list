@@ -9,6 +9,7 @@ const getAll = () => {
 }
 
 const getByName = (name) => {
+  console.log(name, "getbyname")
   const request = axios.get(`${baseUrl}/${name}`)
   return request.then(response => response.data)
 }
@@ -19,6 +20,7 @@ const create = async (newObject) => {
 }
 
 const update = (id, newObject) => {
+  console.log("update", newObject)
   const request = axios.put(`${baseUrl}/${id}`, newObject)
   return request.then(response => response.data)
 }
