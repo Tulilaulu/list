@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import '../App.css';
 import Notification from './Notification'
+import Item from './Item'
 import listService from '../services/lists'
+import { Redirect } from 'react-router-dom'
 
 class List extends React.Component {
   constructor() {
@@ -12,7 +14,8 @@ class List extends React.Component {
       loading: true,
       newName: '',
       newNotes: '',
-      newQuantity: 0
+      newQuantity: '',
+      toFrontpage: false
     }
   }
 
@@ -22,7 +25,6 @@ class List extends React.Component {
       .getByName(name)
       .then(list => {
         this.setState({ list: list, loading: false })
-        console.log(list)
       })
       .catch(error => {
         console.log(error)
@@ -33,29 +35,7 @@ class List extends React.Component {
       })
   }
 
-  toggleVisible = () => {
-    this.setState({ showAll: !this.state.showAll })
-  }
-
-  addList = (event) => {
-    event.preventDefault()
-    const listObject = {
-      content: this.state.newList,
-      date: new Date(),
-    }
-    
-    listService
-      .create(listObject)
-      .then(newList => {
-        this.setState({
-          lists: this.state.lists.concat(newList),
-          newList: ''
-        })
-      })
-  }
-
   toggleVisibility = () => {
-    console.log("toggle")
     const list = this.state.list
     const listObject = { ...list, listed: !list.listed }
 
@@ -81,15 +61,21 @@ class List extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  deleteItem = (item) => {
-    console.log(item)
-    const newItems = this.state.list.items.filter(i => i._id != item._id)
-    const newList = {...this.state.list, items: newItems}
+  addItem = (event) => {
+    event.preventDefault()
+    const newItem = {
+      name: this.state.newName,
+      notes: this.state.newNotes,
+      quantity: this.state.newQuantity};
     listService
-      .update(newList.id, newList)
+      .addItem(this.state.list.id, newItem)
       .then(changedList => {
+        console.log(changedList)
         this.setState({
-          list: changedList
+          list: changedList,
+          newName: '',
+          newNotes: '',
+          newQuantity: ''
         })
       })
       .catch(error => {
@@ -103,32 +89,33 @@ class List extends React.Component {
       })  
   }
 
-  addItem = (event) => {
+  deleteList = (event) => {
     event.preventDefault()
-    const newItems = this.state.list.items.concat({
-      name: this.state.newName,
-      notes: this.state.newNotes,
-      quantity: this.state.newQuantity});
-    const newList = {...this.state.list, items: newItems}
-    listService
-      .update(newList.id, newList)
-      .then(changedList => {
-        this.setState({
-          list: changedList,
-          newName: '',
-          newNotes: '',
-          newQuantity: 0
+    if (window.confirm('Haluatko varmasti poistaa koko listan?')){
+      listService
+        .deleteList(this.state.list.id)
+        .then(changedList => {
+          this.setState({
+            list: null,
+            toFrontpage: true
+          })
         })
-      })
-      .catch(error => {
-        console.log(error)
-        this.setState({
-          error: `virhe`
+        .catch(error => {
+          console.log(error)
+          this.setState({
+            error: `virhe`
+          })
+          setTimeout(() => {
+            this.setState({ error: null })
+          }, 8000)
         })
-        setTimeout(() => {
-          this.setState({ error: null })
-        }, 8000)
-      })  
+      }
+  }
+
+  updateList = (list) => {
+    this.setState({
+      list: list
+    })
   }
 
   render() {
@@ -137,6 +124,9 @@ class List extends React.Component {
       return (                                                          
         <div>Lataa.....</div>
       )
+    }
+    else if (this.state.toFrontpage === true) {
+      return <Redirect to={{pathname: '/'}}></Redirect>
     }
     else if (list == null){
       return ( 
@@ -151,24 +141,19 @@ class List extends React.Component {
           <Notification message={this.state.error} />
           <h1>{list.name}</h1>
           <button onClick={this.toggleVisibility}>{list.listed ? "Piilota etusivun listasta" : "Lisää etusivun listaan"}</button>
+          <button onClick={this.deleteList}>Poista koko lista</button>
           <ul>
               {list.items.map(item => 
-                <li key={item._id}>
-                {item.name} 
-                 {(item.quantity > 0) ? (
-                  <span className="quantity">{item.quantity} </span>
-                ) : ( '' )}
-                <span className="notes">{item.notes}</span>
-                <span className="delete" onClick={this.deleteItem.bind(this, item)}>X</span>
-                </li>)}  
+                <Item item={item} key={item._id} listId={this.state.list.id} updateList={this.updateList}/>
+              )}  
           </ul>   
 
           <p>Lisää:</p>
           <form onSubmit={this.addItem}>
-            <label>Nimi:</label><input type="text" name="newName" onChange={this.handleChange}/>
+            <label>Nimi:</label><input type="text" name="newName" value={this.state.newName} onChange={this.handleChange}/>
             <br/>
-            <label>Muuta:</label><input type="text" name="newNotes" onChange={this.handleChange}/><br/>
-            <label>Määrä:</label><input type="text" name="newQuantity" onChange={this.handleChange}/><br/>
+            <label>Muuta:</label><input type="text" name="newNotes" value={this.state.newNotes} onChange={this.handleChange}/><br/>
+            <label>Määrä:</label><input type="text" name="newQuantity" value={this.state.newQuantity} onChange={this.handleChange}/><br/>
             <input type="submit" value="Lähetä"/>
           </form>
           <br/>

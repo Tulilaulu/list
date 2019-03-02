@@ -25,4 +25,24 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, create, update, getByName}
+const editItem = (listId, item) => {
+  const request = axios.put(`${baseUrl}/items/${listId}/${item._id}`, item)
+  return request.then(response => response.data)
+}
+
+const addItem = (listId, newItem) => {
+  const request = axios.put(`${baseUrl}/items/${listId}`, newItem)
+  return request.then(response => response.data)
+}
+
+const deleteList = (id) => {
+  const request = axios.delete(`${baseUrl}/${id}`)
+  return request.then(response => response.data)
+}
+
+const deleteItem = (listId, itemId) => {
+  const request = axios.delete(`${baseUrl}/items/${listId}/${itemId}`)
+  return request.then(response => response.data)
+}
+
+export default { getAll, create, update, getByName, deleteList, deleteItem, addItem, editItem}

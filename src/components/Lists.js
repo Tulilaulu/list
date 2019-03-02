@@ -32,16 +32,16 @@ class Lists extends React.Component {
     event.preventDefault()
     console.log(this.state.newList);
     var asdf = listService.getByName(this.state.newList)
-    
-    if (asdf){
+    try {
+      await asdf;
       this.setState({
         error: `Nimellä '${this.state.newList}' on jo olemassa lista`,
       })
       setTimeout(() => {
         this.setState({ error: null })
-      }, 8000)
-    }
-    else{
+      }, 8000);
+    } catch (e) {
+      console.log(e);
       const listObject = {
         name: this.state.newList,
         date: new Date(),
