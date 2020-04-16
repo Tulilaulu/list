@@ -62,23 +62,22 @@ class Lists extends React.Component {
       return <Redirect to={{pathname: '/'+this.state.newList}}></Redirect>
     }
     return (
-      <div>
+      <div className="lists-page">
         <h1>Listat</h1>
 
         <Notification message={this.state.error} />
-
-        <form onSubmit={this.makeNewList}>
-          <label>Tee uusi lista:</label>
-          <input type="text" name="newList" onChange={this.handleListNameChange}/>
-          <input type="submit" value="Lähetä"/>
-        </form>
-
          <div>          
-          <ul>
+          <ul className="list-list">
             {this.state.lists.map(list => 
               <li key={list.id}><a key={list.name} href={list.name}>{list.name}</a></li>)}  
           </ul>
         </div>
+
+        <form onSubmit={this.makeNewList}>
+          <label>Tee uusi lista:</label><br/>	   
+          <input type="text" className="new-list-name" name="newList" onChange={this.handleListNameChange}/><br/>	  
+          <input type="submit" value="Lähetä"/>
+        </form>
 
       </div>
     )

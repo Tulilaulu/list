@@ -81,7 +81,7 @@ class Item extends React.Component {
     return (
         <li key={this.state.id}>
             {this.state.editing ? (
-              <form onSubmit={this.saveEditedItem}>
+              <form className="add-form" onSubmit={this.saveEditedItem}>
                 <label>Nimi:</label><input type="text" name="name" value={this.state.name} onChange={this.handleChange}/>
                 <br/>
                 <label>Muuta:</label><input type="text" name="notes" value={this.state.notes} onChange={this.handleChange}/><br/>
@@ -90,11 +90,11 @@ class Item extends React.Component {
               </form>
             ) : (                
             <>
+              <span className="fa fa-times" onClick={this.deleteItem}></span>
+              <span className="fa fa-pencil" onClick={this.editItem}></span>
               <h4 className="name">{this.state.name}</h4>
-              <span className="quantity">{this.state.quantity} </span>
-              <span className="notes">{this.state.notes}</span>
-              <span className="edit" onClick={this.editItem}> muokkaa </span>
-              <span className="delete" onClick={this.deleteItem}> X </span>
+              <span className="quantity">{this.state.quantity} </span> 
+              <span className="notes">({this.state.notes})</span>
             </>
             )}
         </li>

@@ -140,24 +140,30 @@ class List extends React.Component {
         <div>
           <Notification message={this.state.error} />
           <h1>{list.name}</h1>
-          <button onClick={this.toggleVisibility}>{list.listed ? "Piilota etusivun listasta" : "Lisää etusivun listaan"}</button>
-          <button onClick={this.deleteList}>Poista koko lista</button>
-          <ul>
-              {list.items.map(item => 
-                <Item item={item} key={item._id} listId={this.state.list.id} updateList={this.updateList}/>
-              )}  
-          </ul>   
-
-          <p>Lisää:</p>
-          <form onSubmit={this.addItem}>
+	  <div className="list-commands">
+  	    <a href="/" className="fa fa-arrow-left" title="Takaisin etusivulle" alt="Takaisin etusivulle"></a>
+            <a 
+	      onClick={this.toggleVisibility} 
+	      className={list.listed ? "fa fa-eye-slash" : "fa fa-eye"} 
+	      title={list.listed ? "Piilota etusivun listasta" : "Lisää etusivun listaan"}
+	      alt={list.listed ? "Piilota etusivun listasta" : "Lisää etusivun listaan"}>
+	    </a>
+            <a onClick={this.deleteList} className="fa fa-trash" title="Poista koko lista" alt="Poista koko lista"></a>
+	  </div>
+          <p className="add">Lisää:</p>
+          <form onSubmit={this.addItem} className="add-form">
             <label>Nimi:</label><input type="text" name="newName" value={this.state.newName} onChange={this.handleChange}/>
             <br/>
             <label>Muuta:</label><input type="text" name="newNotes" value={this.state.newNotes} onChange={this.handleChange}/><br/>
             <label>Määrä:</label><input type="text" name="newQuantity" value={this.state.newQuantity} onChange={this.handleChange}/><br/>
             <input type="submit" value="Lähetä"/>
           </form>
-          <br/>
-          <a href="/">Takaisin etusivulle</a>          
+ 
+          <ul className="items">
+              {list.items.map(item => 
+                <Item item={item} key={item._id} listId={this.state.list.id} updateList={this.updateList}/>
+              )}  
+          </ul>   
         </div>
       )
     }
