@@ -84,8 +84,8 @@ class Item extends React.Component {
               <form className="add-form" onSubmit={this.saveEditedItem}>
                 <label>Nimi:</label><input type="text" name="name" value={this.state.name} onChange={this.handleChange}/>
                 <br/>
-                <label>Muuta:</label><input type="text" name="notes" value={this.state.notes} onChange={this.handleChange}/><br/>
                 <label>Määrä:</label><input type="text" name="quantity" value={this.state.quantity} onChange={this.handleChange}/><br/>
+                <label>Muuta:</label><input type="text" name="notes" value={this.state.notes} onChange={this.handleChange}/><br/>
                 <input type="submit" value="Tallenna"/>
               </form>
             ) : (                

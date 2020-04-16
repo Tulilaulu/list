@@ -154,8 +154,8 @@ class List extends React.Component {
           <form onSubmit={this.addItem} className="add-form">
             <label>Nimi:</label><input type="text" name="newName" value={this.state.newName} onChange={this.handleChange}/>
             <br/>
-            <label>Muuta:</label><input type="text" name="newNotes" value={this.state.newNotes} onChange={this.handleChange}/><br/>
             <label>Määrä:</label><input type="text" name="newQuantity" value={this.state.newQuantity} onChange={this.handleChange}/><br/>
+            <label>Muuta:</label><input type="text" name="newNotes" value={this.state.newNotes} onChange={this.handleChange}/><br/>
             <input type="submit" value="Lähetä"/>
           </form>
  
