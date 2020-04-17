@@ -93,8 +93,10 @@ class Item extends React.Component {
               <span className="fa fa-times" onClick={this.deleteItem}></span>
               <span className="fa fa-pencil" onClick={this.editItem}></span>
               <h4 className="name">{this.state.name}</h4>
-              <span className="quantity">{this.state.quantity} </span> 
+              <span className="quantity">{this.state.quantity} </span>
+	      {this.state.notes ? (
               <span className="notes">({this.state.notes})</span>
+	      ) : ""}
             </>
             )}
         </li>
